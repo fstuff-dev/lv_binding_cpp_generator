@@ -1,0 +1,47 @@
+{
+	
+
+	"globals": {
+					"version":"0.0",
+					"version_lvgl":"8.0",
+					"bindingname":"lv_binding_cpp",
+	
+					"libcpath":"./files/utils/fake_libc_include",
+					"ipath":"./lvgl",
+					"opath":"."
+	},
+	
+	
+	"configurations": [ 
+		{ 
+		
+			"skeleton": {
+							"paths": [
+										"src",
+										"src/core",
+										"src/widgets",
+										"src/misc" 
+							]
+			},
+		
+				
+			"widgets": [ 
+				{ 
+					"name":"animimg",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/animimg/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				}
+				
+			]
+			
+		}
+		
+	]
+
+}
