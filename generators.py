@@ -7,133 +7,163 @@ Created on Jun 30, 2021
 import sys
 import os
 import shutil
-import re
-from work.cppstylegen import CppStyeGenerator
-sys.path.extend(['.', '..'])
-from work.cppwidgetgen import CppWidgetGenerator, generateWidgetsHeader
-from work.cppgenericgen  import CppGenericGenerator
-from work.cpptimergen  import CppTimerGenerator
-from work.cpptimelinegen import CppTimelineGenerator
-from work.cppanimgen import CppAnimGenerator
+from util import *
+from cpp import *
 
 
-
-def getGenerator(wname):
-    
-    if(wname == "style"):
-        return CppStyeGenerator()
-    
-    if(wname == "timer"):
-        return CppTimerGenerator()
-    
-    if(wname == "anim"):
-        return CppAnimGenerator()
-    
-    if(wname == "anim_timeline"):
-        return CppTimelineGenerator()
-    
-    
-    return CppGenericGenerator()
-
+# Get generator class
+def get_generator(arg):
+    if("generator" in arg):
         
-def lvwidget(inpath,extrapath,outpath, wname):
-    
-    automaticscan = False
-    gen = CppWidgetGenerator()
-    gen.setStdLibPath(r'utils/fake_libc_include')
-    
-    if(not wname):
-        automaticscan = True
-    else:
-        gen.setName(wname)
+        printv(f"\n{bcolors.WARNING}### Using : {arg['generator']} generator for {arg['name']}")
         
-    fileScan = os.listdir(inpath)
-    if(wname == "include"):
-        generateWidgetsHeader(inpath)
-    else:
+        if(arg["generator"] == "obj"):
+            return CppObjGenerator()
+        
+        if(arg["generator"] == "widgets"):
+            return CppWidgetsGenerator()
+        
+        if(arg["generator"] == "generic"):
+            return CppGenericGenerator()
+        
+    return CppGenerator()
+
+
+def get_files(arg,absipath):
+    
+    file_list = []
+    
+    #Auto scan
+    if("autoscan" in arg and arg["autoscan"]):
+        dir = os.path.join(absipath,arg["relpath"])
+        fileScan = os.listdir(dir)
+        
         for file in fileScan:
-            fname = inpath + file
+            fname = os.path.join(dir,file) 
             file_name, file_extension = os.path.splitext(fname)
-            
-            if("lv_"  in file and file_extension == ".c"):
-                
-                pattern = r'lv_(.*).c'
-                try:
-                    substr = re.match(pattern, file).group(1)
-                except AttributeError:
-                    substr = ''
-                if(automaticscan):
-                    wname = substr
-                    
-                gen.setName(wname)
-                gen.scan(fname)
-                if(wname != "obj"):
-                    gen.generate(outpath)
-                    
-                   
-        if(wname == "obj"):
-            flex_path = os.path.join(extrapath,"layouts/flex")
-            grid_path = os.path.join(extrapath,"layouts/grid")
-            gen.scan(flex_path + "/lv_flex.c")
-            gen.scan(grid_path + "/lv_grid.c")
-            gen.generate(outpath)
-
-def lvGeneric(inpath,extrapath,outpath, wname, altname):
-    
-    gen = getGenerator(wname)
-    gen.setAltname(altname)
-    gen.setStdLibPath(r'utils/fake_libc_include')
-    
-    fileScan = os.listdir(inpath)
-    for file in fileScan:
-        fname = inpath + file
-        file_name, file_extension = os.path.splitext(fname)
-        if("lv_"  in file and file_extension == ".c"):     
-            pattern = r'lv_(.*).c'
-            try:
-                substr = re.match(pattern, file).group(1)
-                if(wname in substr):
-                    gen.setName(wname)
-                    gen.scan(fname)
-                    
-            except AttributeError:
-                substr = None
-                break
-            
-    if(wname == "style"):
-        flex_path = os.path.join(extrapath,"layouts/flex")
-        grid_path = os.path.join(extrapath,"layouts/grid")
-        gen.scan(flex_path + "/lv_flex.c")
-        gen.scan(grid_path + "/lv_grid.c")
-             
-    gen.generate(outpath)
-            
-def libSkeleton(inpath, opath,copy = False):
-    if(not os.path.exists(opath)): 
-        os.mkdir(opath)
+            if(f"lv_{arg['name']}"  in file_name and file_extension == ".c"):
+                file_list.append(fname)
     else:
-        shutil.rmtree(opath)
-        os.mkdir(opath)
+        #files to scan
+        if("filetoscan" in arg):
+            for file in arg["filetoscan"]:
+                file_list.append( os.path.join(absipath,file) )
+    
+    #offtree files to scan
+    if("offtree" in arg):
+        for file in arg["offtree"]:
+            file_list.append( os.path.join(absipath,file) )
+            
+            
+    printv(f"\nFile to scan for {arg['name']}") 
+    for file in file_list:
+        printv(file)
+    
+    return file_list
+
+
+
+
+# Check if output path exist and flush it
+def flushopath(opath):
+    if(os.path.exists(opath)): 
+        shutil.rmtree(opath)    
+    os.mkdir(opath)
+    
+# Generate skeleton        
+def skeleton(skel,confglobals):
+    absopath = os.path.join(confglobals["opath"],confglobals["bindingname"])
+    printv("\n# Building skeleton #")
+    flushopath(absopath)
+    for relpath in skel["paths"]:
+        abspath = os.path.join(absopath,relpath)
+        os.mkdir(abspath)
+        printv(f"Dir: {abspath}")
         
-    #Copy the input lib folder skeleton
-    if(copy):
-        for t in os.walk(inpath):
-            relpath = os.path.relpath(t[0], inpath)
-            realOutPath = os.path.join(opath, relpath)
-            if(relpath != "."):
-                os.mkdir(realOutPath)
-            print(realOutPath)
-    else:
-        srcpath = os.path.join(opath, "src/")
-        corepath = os.path.join(opath, "src/core/")
-        widgetspath = os.path.join(opath, "src/widgets/")
-        os.mkdir(srcpath)
-        os.mkdir(corepath)
-        os.mkdir(widgetspath)
-        for t in os.walk(opath):
-            print(t[0])
+
+
+
+
+
+
+# Simple generator
+def simplegen(args,confglobals):
+    
+    absopath = os.path.join(confglobals["opath"],confglobals["bindingname"])
+    absipath = confglobals["ipath"]
+    libc = confglobals["libcpath"]
+    
+    
+    # Generate for each argument in configuration
+    for arg in args:
+        files = get_files(arg,absipath)
+        classopath = os.path.join(absopath,arg["relopath"])
+        gen = get_generator(arg)
+        
+        # If Generator is implemented run generation
+        if(gen):
+            gen.setlibc(libc)
+            gen.setname(arg["name"])
+            gen.set_template(arg["template"])
+            
+            if("altname" in arg):
+                gen.setalt(arg["altname"])
+            
+            for file in files:    
+                gen.scan(file)
+            gen.generate(classopath)
+ 
+# Generate binding generic
+def generics(args,confglobals):
+    printv("\n# Building generics #")
+    simplegen(args,confglobals)
     pass
 
-    
-def lvcore(inpath, outpath):
+# Generate binding widgets
+def widgets(args,confglobals):
+    printv("\n# Building widgets #")
+    simplegen(args,confglobals)
     pass
+
+# Generate fixed binding class
+def fixed(args,confglobals):
+    printv("\n# Building fixed #")
+    simplegen(args,confglobals)
+    pass
+
+
+
+
+
+
+
+# Generate the binding
+def generate(conf,confglobals):
+       
+    # Generat only if opath and bindingname exist
+    if("opath" in confglobals and "bindingname" in confglobals ):
+
+        # Generate Skeleton
+        if("skeleton" in conf):
+            skeleton(conf["skeleton"],confglobals)
+        
+        # Generate Generic
+        if("generic" in conf):  
+            generics(conf["generic"],confglobals)
+            
+        # Generate Widgets
+        if("widgets" in conf):    
+            widgets(conf["widgets"],confglobals)
+            
+        # Generate Fixed class
+        if("fixed" in conf): 
+            fixed(conf["fixed"],confglobals)
+    pass
+
+
+
+
+
+
+
+

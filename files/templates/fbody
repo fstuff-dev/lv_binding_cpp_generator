@@ -1,0 +1,7 @@
+
+	$template
+	$ret $method ( $plist ) $decorations{
+		$before
+		$fcall ( $pcall );
+		$after
+	}
