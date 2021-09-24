@@ -26,6 +26,9 @@ def get_generator(arg):
         if(arg["generator"] == "generic"):
             return CppGenericGenerator()
         
+        if(arg["generator"] == "fixed"):
+            return CppFixedGenerator()
+        
     return CppGenerator()
 
 
@@ -47,7 +50,11 @@ def get_files(arg,absipath):
         #files to scan
         if("filetoscan" in arg):
             for file in arg["filetoscan"]:
-                file_list.append( os.path.join(absipath,file) )
+                if("relpath" in arg):
+                    f = os.path.join(absipath,file)
+                else:
+                    f = os.path.join(arg["path"],file)
+                file_list.append( f )
     
     #offtree files to scan
     if("offtree" in arg):

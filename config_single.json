@@ -1,0 +1,57 @@
+{
+	
+
+	"globals": {
+					"version":"0.0",
+					"version_lvgl":"8.0",
+					"bindingname":"lv_binding_cpp",
+	
+					"libcpath":"./files/utils/fake_libc_include",
+					"ipath":"./lvgl",
+					"opath":"."
+	},
+	
+	
+	"configurations": [ 
+		{ 
+		
+			"skeleton": {
+							"paths": [
+										"src",
+										"src/core",
+										"src/widgets",
+										"src/misc" 
+							]
+			},
+		
+				
+			"fixed": [ 
+				{ 
+					"name":"corefiles",
+					
+					"altname":"corefiles",
+					"path":"./files/fixed/",
+					"relopath":"src/core/",
+					"filetoscan": [
+							"lvglpp.h",
+							"lvglpp.cpp",
+							"LvEvent.h",
+							"LvDisplay.h",
+							"LvDisplay.cpp",
+							"LvIndev.h",
+							"LvIndev.cpp",
+							"LvScr.h",
+							"LvScr.cpp"
+							
+					],
+					"generator":"fixed",
+					"template":"fixed",
+					"autoscan": false
+				}
+			]
+			
+		}
+		
+	]
+
+}
