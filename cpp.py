@@ -10,6 +10,7 @@ from pycparser.c_generator import CGenerator
 from util import *
 from copy import deepcopy
 from string import Template
+import shutil
 
 
 ################################################################ BASE GENERATOR ###########################################################
@@ -71,7 +72,7 @@ class CppGenerator(c_ast.NodeVisitor):
         if(cpp):
             file = open(os.path.join(opath,self.classname + ".cpp"),"w")
             if(file):
-                file.write(hpp)
+                file.write(cpp)
                 file.close()
         pass
   
@@ -146,8 +147,11 @@ class CppGenerator(c_ast.NodeVisitor):
         bodyTemplate = Template(fbodyT)
         defTemplate = Template(fdefT)
         
-        declaration = defTemplate.safe_substitute(tDict)
-        method = bodyTemplate.substitute(tDict)
+        if(tDict["defbody"] != ""):
+            declaration = defTemplate.safe_substitute(tDict)
+        else:
+            declaration = defTemplate.safe_substitute(tDict)
+            method = bodyTemplate.substitute(tDict)
         
         
         return declaration,method
@@ -241,13 +245,15 @@ class CppObjGenerator(CppGenerator):
             "ret" : ret,
             "classname" : self.classname,
             "templateT" : "",
+            "class" : "",
             "method" : methodname,
             "plist" : plist,
             "decorations" : "",
             "before" : "",
             "fcall" : fcall,
             "pcall" : pcall,
-            "after" : after
+            "after" : after,
+            "defbody" : ""
             
             }    
             
@@ -322,7 +328,7 @@ class CppObjGenerator(CppGenerator):
         
 ############################################################## WIDGETS GENERATOR ##############################################################       
         
-class CppWidgetsGenerator(CppObjGenerator):
+class CppWidgetsGenerator(CppGenerator):
     def __init__(self):
         super().__init__()
         
@@ -400,6 +406,7 @@ class CppWidgetsGenerator(CppObjGenerator):
         after = ""
         decorations = ""
         pcall_constructor = ""
+        defbody = ""
         
         plist = self.parlist(f_decl,f_decl.type.args.params)
         pcall = self.parcall(f_decl,f_decl.type.args.params)
@@ -420,6 +427,7 @@ class CppWidgetsGenerator(CppObjGenerator):
             decorations = f": LvBaseObj({fcall}( {pcall} ))"
             pcall = "0"
             fcall = ""
+            defbody = "{ }"
         else:
             if("get" in f_name):
                 decorations = "const noexcept"
@@ -436,13 +444,15 @@ class CppWidgetsGenerator(CppObjGenerator):
             "ret" : ret,
             "classname" : self.classname,
             "templateT" : "",
+            "class" : f"{self.classname} ::",
             "method" : methodname,
             "plist" : plist,
             "decorations" : decorations,
             "before" : "",
             "fcall" : fcall,
             "pcall" : pcall,
-            "after" : after
+            "after" : after,
+            "defbody" : defbody
             
             }    
             
@@ -463,11 +473,13 @@ class CppWidgetsGenerator(CppObjGenerator):
         wDict = {
             "classname": self.classname,
             "uppername": f"LV{self.uppername}_H_",
-            "methods": self.cpp_temp
+            "methods": self.hpp_temp
             }
         
         hppOut = hppTemplate.substitute(wDict)
-        cppOut = None
+        
+        wDict["methods"] = self.cpp_temp
+        cppOut = cppTemplate.substitute(wDict)
 
         return hppOut,cppOut
         
@@ -476,6 +488,41 @@ class CppWidgetsGenerator(CppObjGenerator):
         
 class CppGenericGenerator(CppGenerator):
     def __init__(self):
-        super().__init__() 
+        super().__init__()
+        
+        
+############################################################## FIXED GENERATOR ##############################################################       
+        
+class CppFixedGenerator():
+    def __init__(self):
+        super().__init__()  
+        self.filenames  = []
+        
+    # Scan a file
+    def scan(self, filename):
+        printv(f"Scanning file: {filename}")
+        self.filenames.append(filename)    
+        pass
+     
+    # Set libc path   
+    def setlibc(self,libc):
+        pass
+    
+    # Set the name of the object to generate    
+    def setname(self,name):
+        pass
+        
+    # Set the alternate name of the object to generate    
+    def setalt(self,alternate):
+        pass
+    
+    # Generate the class    
+    def generate(self,opath):
+        for file in self.filenames:
+            shutil.copy(file,opath)
+        pass
+    
+    def set_template(self,template):
+        pass
      
         

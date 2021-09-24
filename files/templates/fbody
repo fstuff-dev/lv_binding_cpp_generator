@@ -1,6 +1,6 @@
 
 	$template
-	$ret $method ( $plist ) $decorations{
+	$ret $class $method ( $plist ) $decorations{
 		$before
 		$fcall ( $pcall );
 		$after

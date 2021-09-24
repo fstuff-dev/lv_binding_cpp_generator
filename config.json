@@ -27,6 +27,24 @@
 				
 			"widgets": [ 
 				{ 
+					"name":"obj",
+					
+					"altname":"obj",
+					"relpath":"src/core/",
+					"relopath":"src/core/",
+					"filetoscan": [
+									"src/core/lv_obj.c"
+					],
+					"offtree": [
+						"src/extra/layouts/flex/lv_flex.c",
+						"src/extra/layouts/grid/lv_grid.c" 
+					],
+					"generator":"obj",
+					"template":"LvObj",
+					"autoscan": true
+				},
+				
+				{ 
 					"name":"animimg",
 					
 					"altname":"obj",
@@ -36,10 +54,422 @@
 					"generator":"widgets",
 					"template":"LvWidget",
 					"autoscan": true
+				},
+				
+				{ 
+					"name":"calendar",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/calendar/",
+					"relopath":"src/widgets",
+					"filetoscan": [
+									"src/extra/widgets/calendar/lv_calendar.c"
+					],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": false
+				},
+				
+				{ 
+					"name":"chart",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/chart/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"colorwheel",
+					
+					"altname":"colorwheel",
+					"relpath":"src/extra/widgets/colorwheel/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"imgbtn",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/imgbtn/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"keyboard",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/keyboard/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"led",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/led/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"list",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/list/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"meter",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/meter/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"msgbox",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/msgbox/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"spinbox",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/spinbox/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"spinner",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/spinner/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"tabview",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/chart/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"win",
+					
+					"altname":"obj",
+					"relpath":"src/extra/widgets/win/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"btn",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [
+									"src/widgets/lv_btn.c"
+					],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": false
+				},
+				
+				{ 
+					"name":"arc",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"bar",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"btnmatrix",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [
+									"src/widgets/lv_btnmatrix.c"
+					],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": false
+				},
+				{ 
+					"name":"canvas",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"checkbox",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"dropdown",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"img",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"label",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"line",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"roller",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"slider",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"switch",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"table",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				},
+				{ 
+					"name":"textarea",
+					
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
+				}
+			],
+			
+			
+			
+					
+			"generic": [ 
+				{ 
+					"name":"style",
+					
+					"altname":"style",
+					"relpath":"src/misc/",
+					"relopath":"src/misc/",
+					"filetoscan": [],
+					"offtree": [
+						"src/extra/layouts/flex/lv_flex.c",
+						"src/extra/layouts/grid/lv_grid.c" 
+					],
+					"generator":"generic",
+					"template":"LvGeneric",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"timer",
+					
+					"altname":"timer",
+					"relpath":"src/misc/",
+					"relopath":"src/misc/",
+					"filetoscan": [],
+					"generator":"generic",
+					"template":"LvGeneric",
+					"autoscan": true
+				},
+				
+				{ 
+					"name":"anim",
+					
+					"altname":"a",
+					"relpath":"src/misc/",
+					"relopath":"src/misc/",
+					"filetoscan": ["src/misc/lv_anim.c"],
+					"generator":"generic",
+					"template":"LvGeneric",
+					"autoscan": false
+				},
+				
+				{ 
+					"name":"anim_timeline",
+					
+					"altname":"at",
+					"relpath":"src/misc/",
+					"relopath":"src/misc/",
+					"filetoscan": [],
+					"generator":"generic",
+					"template":"LvGeneric",
+					"autoscan": true
 				}
 				
-			]
+				
+			],
 			
+			
+			"fixed": [ 
+				{ 
+					"name":"corefiles",
+					
+					"altname":"corefiles",
+					"path":"./files/fixed/",
+					"relopath":"src/core/",
+					"filetoscan": [
+							"lvglpp.h",
+							"lvglpp.cpp",
+							"LvEvent.h",
+							"LvDisplay.h",
+							"LvDisplay.cpp",
+							"LvIndev.h",
+							"LvIndev.cpp",
+							"LvScr.h",
+							"LvScr.cpp"
+							
+					],
+					"generator":"fixed",
+					"template":"fixed",
+					"autoscan": false
+				}
+			]
 		}
 		
 	]
