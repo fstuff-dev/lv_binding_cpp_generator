@@ -9,6 +9,7 @@ import os
 import shutil
 from util import *
 from cpp import *
+from string import Template
 
 
 # Get generator class
@@ -138,6 +139,32 @@ def fixed(args,confglobals):
     simplegen(args,confglobals)
     pass
 
+# Generate widgets header
+def widgetsHeader(confglobals):
+    printv("\n# Building Widgets header #")
+    absopath = os.path.join(confglobals["opath"],confglobals["bindingname"],"src/widgets")
+    includes = ""
+    
+    ext = ('.h')
+    for file in os.listdir(absopath):
+        if file.endswith(ext):
+            includes += f'\n#include "{file}"'
+        else:
+            continue
+    
+    templateFile = open("files/templates/LvWidgets.h","r")
+    templateHeader = Template(templateFile.read())
+    templateFile.close()
+    
+    outfile = templateHeader.substitute({"includes":includes})
+    
+    fname = os.path.join(absopath,"LvWidgets.h")
+    file = open(fname,"w")
+    file.write(outfile)
+    file.close()
+    
+    pass
+
 
 
 
@@ -153,7 +180,7 @@ def generate(conf,confglobals):
         # Generate Skeleton
         if("skeleton" in conf):
             skeleton(conf["skeleton"],confglobals)
-        
+            
         # Generate Generic
         if("generic" in conf):  
             generics(conf["generic"],confglobals)
@@ -161,6 +188,9 @@ def generate(conf,confglobals):
         # Generate Widgets
         if("widgets" in conf):    
             widgets(conf["widgets"],confglobals)
+        
+        # Generate Widgets Header   
+        widgetsHeader(confglobals)
             
         # Generate Fixed class
         if("fixed" in conf): 
