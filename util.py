@@ -41,12 +41,11 @@ class bcolors:
 
 # Check if a function is variadic
 def is_variadicfunc( f_decl):
-    if(not f_decl.type.args):
-        for idx, param_decl in enumerate(f_decl.type.args.params):
-            if(type(param_decl) == c_ast.EllipsisParam): 
-                return True
-            else:
-                pass
+    for idx,param in enumerate(f_decl.type.args.params):
+        if(type(param) == c_ast.EllipsisParam):  
+            return True
+        else:
+            pass
     return False
     
 # Check if a function is a static method

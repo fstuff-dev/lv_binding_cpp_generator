@@ -84,9 +84,9 @@ class CppGenerator(c_ast.NodeVisitor):
         static = is_staticfunc(f_decl)
         if(static): return False
         
-        samefile = os.path.samefile(f_decl.coord.file,self.filename)
-        if(not samefile):
-            return False
+        # samefile = os.path.samefile(f_decl.coord.file,self.filename)
+        # if(not samefile):
+            # return False
         
         # Interate ove function parameters
         for idx, param_decl in enumerate(f_decl.type.args.params):
@@ -156,30 +156,50 @@ class CppGenerator(c_ast.NodeVisitor):
         
         return declaration,method
     
+    def method_name (self,f_name):
+        
+        methodname = f_name.replace(f"lv_{self.name}"," ")
+        # methodname = methodname.replace(f"{self.altname}"," ")
+        # methodname = methodname.replace("lv"," ")
+        # methodname = methodname.replace("_"," ")
+        methodname = camelCase(methodname)
+        
+        return methodname
+    
     
     ########################################### Virtual methods implemented in derivated generator ###########################################
     
     # Check if the function scanned can be good
     def fgood_condition(self,f_decl,f_name, pidx ,pname, ptype):
         fgood = False
+        
+        if(pidx == 0 and 
+           (self.name in f_name) and 
+           (pname == self.name or pname == self.altname) and 
+           (f"lv_{self.name}" in ptype or f"lv_{self.altname}" in ptype )
+        ): return True
+   
         return fgood
     
     def template_dictionary(self,f_decl):
                 
         tDict = {
             "template" : "",
+            "templatevar": "",
             "ret" : "",
-            "classname" : self.classname,
+            "classname" : "",
             "templateT" : "",
+            "class" : "",
             "method" : "",
             "plist" : "",
             "decorations" : "",
             "before" : "",
-            "fcall" : "" ,
+            "fcall" : "",
             "pcall" : "",
-            "after" : ""
-
-            }
+            "after" : "",
+            "defbody" : ""
+            
+            } 
         
         return tDict
     
@@ -219,18 +239,11 @@ class CppObjGenerator(CppGenerator):
         f_name = f_decl.name
         ret_type = ""
         after = ""
+        fcall = f_name
         
         plist = self.parlist(f_decl,f_decl.type.args.params)
         pcall = self.parcall(f_decl,f_decl.type.args.params)
-
-        fcall = f_name
-        
-        methodname = f_name.replace(f"{self.name}"," ")
-        methodname = methodname.replace(f"{self.altname}"," ")
-        methodname = methodname.replace("lv"," ")
-        methodname = methodname.replace("_"," ")
-        methodname = camelCase(methodname)
-        
+        methodname = self.method_name(f_name)    
         ret = self.cgen.visit(f_decl.type.type)
                 
         if("void" in ret):
@@ -314,17 +327,6 @@ class CppObjGenerator(CppGenerator):
                 
         return list
 
-
-    def fgood_condition(self,f_decl,f_name, pidx ,pname, ptype):
-        fgood = False
-        
-        if(pidx == 0 and 
-           (self.name in f_name) and 
-           (pname == self.name or pname == self.altname) and 
-           (f"lv_{self.name}" in ptype or f"lv_{self.altname}" in ptype )
-        ): return True
-   
-        return fgood
         
 ############################################################## WIDGETS GENERATOR ##############################################################       
         
@@ -363,7 +365,7 @@ class CppWidgetsGenerator(CppGenerator):
         for idx,param in enumerate(params):
             if(type(param) == c_ast.EllipsisParam):  
                 ptype = ""
-                pname = "args"
+                pname = "args..."
             else:
                 ptype = self.cgen.visit(param.type)
                 pname = param.name
@@ -406,20 +408,14 @@ class CppWidgetsGenerator(CppGenerator):
         after = ""
         decorations = ""
         pcall_constructor = ""
-        defbody = ""
-        
+        defbody = "" 
+        templatevar = "" 
+        fcall = f_name
         plist = self.parlist(f_decl,f_decl.type.args.params)
         pcall = self.parcall(f_decl,f_decl.type.args.params)
-        
-        fcall = f_name
-        
-        methodname = f_name.replace(f"{self.name}"," ")
-        methodname = methodname.replace(f"{self.altname}"," ")
-        methodname = methodname.replace("lv"," ")
-        methodname = methodname.replace("_"," ")
-        methodname = camelCase(methodname)
-        
+        methodname = self.method_name(f_name)    
         ret = self.cgen.visit(f_decl.type.type)
+        
         
         if(f"lv_{self.name}_create" in f_name):
             methodname = self.classname
@@ -428,10 +424,20 @@ class CppWidgetsGenerator(CppGenerator):
             pcall = "0"
             fcall = ""
             defbody = "{ }"
+        elif (is_variadicfunc(f_decl)):
+            if("void" in ret):
+                after = "return *this;"
+                ret = "derivedType&"
+                defbody = "{" + f"{fcall}( {pcall} ); {after}" + "}"
+            else:
+                defbody = "{" + f"return {fcall}( {pcall} ); {after}" + "}"
+            plist = plist.replace("...", "ArgsT... args")
+           
+            templatevar = "\n\ttemplate <typename... ArgsT>"
         else:
             if("get" in f_name):
                 decorations = "const noexcept"
-                
+                    
             if("void" in ret):
                 after = "return *this;"
                 ret = "derivedType&"
@@ -440,7 +446,7 @@ class CppWidgetsGenerator(CppGenerator):
         
         tDict = {
             "template" : "",
-            "templatevar": "",
+            "templatevar": templatevar,
             "ret" : ret,
             "classname" : self.classname,
             "templateT" : "",
@@ -486,10 +492,85 @@ class CppWidgetsGenerator(CppGenerator):
         
 ############################################################## GENERIC GENERATOR ##############################################################       
         
-class CppGenericGenerator(CppGenerator):
+class CppGenericGenerator(CppObjGenerator):
     def __init__(self):
         super().__init__()
         
+    def template_dictionary(self,f_decl):
+        
+        f_name = f_decl.name
+        ret_type = ""
+        after = ""
+        fcall = f_name
+        
+        plist = self.parlist(f_decl,f_decl.type.args.params)
+        pcall = self.parcall(f_decl,f_decl.type.args.params)
+        methodname = self.method_name(f_name)    
+        ret = self.cgen.visit(f_decl.type.type)
+                
+        if("void" in ret):
+            after = "return *this;"
+            ret = f"{self.classname}&"
+        else: fcall = f"return {fcall}"
+
+                 
+        tDict = {
+            "template" : "",
+            "templatevar": "",
+            "ret" : ret,
+            "classname" : self.classname,
+            "templateT" : "",
+            "class" : "",
+            "method" : methodname,
+            "plist" : plist,
+            "decorations" : "",
+            "before" : "",
+            "fcall" : fcall,
+            "pcall" : pcall,
+            "after" : after,
+            "defbody" : ""
+            
+            }    
+            
+        if("get" in f_name):
+            tDict["decorations"] = "const noexcept"
+        
+        return tDict
+            
+    def compose_class(self):
+        file = open(f"files/templates/{self.template_hpp}","r")
+        hpp = file.read()
+        file.close()
+        
+        file = open(f"files/templates/{self.template_cpp}","r")
+        cpp = file.read()
+        file.close()
+        
+        hppTemplate = Template(hpp)
+        cppTemplate = Template(cpp)
+        
+        gDict = {
+            "classname": self.classname,
+            "uppername": f"LV{self.uppername}_H_",
+            "methods": self.hpp_temp,
+            "name" : f"lv_{self.name}_t",
+            "alloc" : "lv_mem_alloc",
+            "del" : "lv_free",
+            "private": "",
+            "objdef": ""
+            }
+        
+        gDict["objdef"] = f"<{gDict['name']},{gDict['del']}>"
+        
+        hppOut = hppTemplate.substitute(gDict)
+        
+        
+        gDict["methods"] = self.cpp_temp
+        cppOut = cppTemplate.substitute(gDict)
+
+        return hppOut,cppOut
+        
+
         
 ############################################################## FIXED GENERATOR ##############################################################       
         
