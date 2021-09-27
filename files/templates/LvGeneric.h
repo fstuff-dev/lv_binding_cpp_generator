@@ -1,26 +1,27 @@
 /*
- * Lv/*WNAME*/.h
+ * $classname.h
  *
  */
 
-#ifndef LV/*WCAP*/_H_
-#define LV/*WCAP*/_H_
+#ifndef $uppername
+#define $uppername
 
 #include "../core/lvglpp.h"
-/*WINCLUDE*/
 
 namespace lvglpp {
 
-class Lv/*WNAME*/ {
+class $classname {
 private:
-	/*WPRIVATE*/
-	LvPointer<lv_/*WTYPE*/_t, /*WDELETE*/> cObj;
+	$private
+	LvPointer $objdef  cObj;
 public:
-	Lv/*WNAME*/();
-	virtual ~Lv/*WNAME*/();
-	lv_/*WTYPE*/_t* raw();/*METHODS*/
+	$classname () {cObj.reset($alloc(sizeof($name)));}
+	operator $name*() const {
+		return cObj.get();
+	}
+	$methods
 };
 
 } /* namespace lvglpp */
 
-#endif /* LV/*WCAP*/_H_ */
+#endif /* $uppername */

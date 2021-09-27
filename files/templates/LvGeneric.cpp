@@ -1,22 +1,11 @@
 /*
- * Lv/*WNAME*/.cpp
+ * $classname.cpp
  *
  */
 
-#include "Lv/*WNAME*/.h"
+#include "$classname.h"
 
 namespace lvglpp {
-
-Lv/*WNAME*/::Lv/*WNAME*/() {
-	cObj.reset(/*WALLOC*/);
-	/*WPOSTINIT*/
+$methods
 }
-
-Lv/*WNAME*/::~Lv/*WNAME*/() {
-}
-
-lv_/*WTYPE*/_t* Lv/*WNAME*/::raw() {
-	return cObj.get();
-}/*METHODS*/
-
-} /* namespace lvglpp */
+/* namespace lvglpp */

@@ -25,28 +25,17 @@
 			},
 		
 				
-			"fixed": [ 
+			"widgets": [ 
 				{ 
-					"name":"corefiles",
+					"name":"label",
 					
-					"altname":"corefiles",
-					"path":"./files/fixed/",
-					"relopath":"src/core/",
-					"filetoscan": [
-							"lvglpp.h",
-							"lvglpp.cpp",
-							"LvEvent.h",
-							"LvDisplay.h",
-							"LvDisplay.cpp",
-							"LvIndev.h",
-							"LvIndev.cpp",
-							"LvScr.h",
-							"LvScr.cpp"
-							
-					],
-					"generator":"fixed",
-					"template":"fixed",
-					"autoscan": false
+					"altname":"obj",
+					"relpath":"src/widgets/",
+					"relopath":"src/widgets",
+					"filetoscan": [],
+					"generator":"widgets",
+					"template":"LvWidget",
+					"autoscan": true
 				}
 			]
 			

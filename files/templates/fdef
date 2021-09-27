@@ -1,2 +1,2 @@
 	$templatevar
-	$ret $method ( $plist ) $decorations $defbody;
+	$ret $method($plist) $decorations $defbody;
