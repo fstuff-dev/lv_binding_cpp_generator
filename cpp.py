@@ -450,7 +450,8 @@ class CppWidgetsGenerator(CppGenerator):
             "ret" : ret,
             "classname" : self.classname,
             "templateT" : "",
-            "class" : f"{self.classname} ::",
+            # "class" : f"{self.classname} ::",
+            "class" : "",
             "method" : methodname,
             "plist" : plist,
             "decorations" : decorations,
@@ -479,13 +480,14 @@ class CppWidgetsGenerator(CppGenerator):
         wDict = {
             "classname": self.classname,
             "uppername": f"LV{self.uppername}_H_",
-            "methods": self.hpp_temp
+            "methods": self.cpp_temp
             }
         
         hppOut = hppTemplate.substitute(wDict)
         
-        wDict["methods"] = self.cpp_temp
-        cppOut = cppTemplate.substitute(wDict)
+        # wDict["methods"] = self.cpp_temp
+        # cppOut = cppTemplate.substitute(wDict)
+        cppOut = None
 
         return hppOut,cppOut
         
